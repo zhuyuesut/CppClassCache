@@ -4,16 +4,18 @@
 #include <iostream>
 
 namespace zhuyuesut {
-    template <typename ValueType>
+    template <typename _ValueType>
     class Cache {
-        ValueType value;
+        _ValueType value;
         
     public:
+        using value_type = _ValueType;
+        
         Cache () = default;
         
-        Cache (const ValueType& i) : value(i) {};
+        Cache (const _ValueType& i) : value(i) {};
         
-        Cache (ValueType&& i) : value(std::move(i)) {};
+        Cache (_ValueType&& i) : value(std::move(i)) {};
         
         template<typename FunctionType>
         Cache operator>> (FunctionType func) {
@@ -29,21 +31,21 @@ namespace zhuyuesut {
             return *this;
         }
         
-        operator ValueType () {
+        operator _ValueType () {
             return value;
         }
     };
     
     class CacheConstruct {
     public:
-        template<typename ValueType>
-        Cache<ValueType> operator() (const ValueType& i) {
-            return Cache<ValueType>(i);
+        template<typename _ValueType>
+        Cache<_ValueType> operator() (const _ValueType& i) {
+            return Cache<_ValueType>(i);
         }
         
-        template<typename ValueType>
-        Cache<ValueType> operator() (ValueType&& i) {
-            return Cache<ValueType>(std::move(i));
+        template<typename _ValueType>
+        Cache<_ValueType> operator() (_ValueType&& i) {
+            return Cache<_ValueType>(std::move(i));
         }
     } make_cache;
 }
